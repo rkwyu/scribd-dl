@@ -32,12 +32,12 @@ output=output
 
 ## Usage (CLI) ##
 ```console
-Usage: node run.js [URL]  
+Usage: npm start [URL]  
 ```
 
 #### Example: Download 《The Minds of Billy Milligan》 ####
 ```console
-node run.js https://www.scribd.com/embeds/249398282/content
+npm start https://www.scribd.com/embeds/249398282/content
 ```
 
 ## License ##
