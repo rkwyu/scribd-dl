@@ -15,11 +15,11 @@ Please make sure the following tool(s) / application(s) are properly setup and r
 ## Setup ##
 1. Download repository  
 ```console
-git clone https://github.com/rkwyu/scridb-dl
+git clone https://github.com/rkwyu/scribd-dl
 ```
 2. Install dependencies
 ```console
-cd ./scridb-dl
+cd ./scribd-dl
 npm install
 ```
 
