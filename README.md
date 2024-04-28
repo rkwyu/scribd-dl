@@ -37,7 +37,7 @@ Usage: npm start [URL]
 
 #### Example: Download 《The Minds of Billy Milligan》 ####
 ```console
-npm start https://www.scribd.com/embeds/249398282/content
+npm start https://www.scribd.com/doc/249398282/The-Minds-of-Billy-Milligan-Daniel-Keyes
 ```
 
 ## License ##
