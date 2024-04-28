@@ -1,0 +1,24 @@
+{
+  "name": "scribd-dl",
+  "version": "1.0.0",
+  "description": "Scribd Document Downloader",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": {
+    "name": "ray.yukawai",
+    "email": "ray.yukawai@gmail.com"
+  },
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "cli-progress": "^3.12.0",
+    "ini": "^4.1.2",
+    "pdfkit": "^0.15.0",
+    "puppeteer": "^19.11.1",
+    "sharp": "^0.33.3"
+  },
+  "type": "module",
+  "types": "module"
+}
