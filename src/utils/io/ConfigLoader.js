@@ -20,7 +20,11 @@ class ConfigLoader {
      * @returns {Promise<string>}
      */
     load(section, key) {
-        return config[section][key]
+        if (Object.keys(config[section]).includes(key)) {
+            return config[section][key]
+        } else {
+            throw new TypeError(`Unknown key: ${key}`)
+        }
     }
 }
 

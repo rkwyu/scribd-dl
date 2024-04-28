@@ -41,7 +41,7 @@ class PuppeteerSg {
    * Close the browser
    */
   async close() {
-    if (!!this.browser) {
+    if (this.browser) {
       await this.browser.close();
       this.browser = null;
     }

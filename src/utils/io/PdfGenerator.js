@@ -1,6 +1,7 @@
 import PDFDocument from 'pdfkit'
 import fs from 'fs'
-import sharp from "sharp"
+
+// eslint-disable-next-line
 import { Image } from '../../object/Image.js'
 
 class PdfGenerator {

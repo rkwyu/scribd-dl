@@ -1,5 +1,4 @@
-import fs, { Dir } from 'fs'
-import path from 'path'
+import fs from 'fs'
 
 class DirectoryIo {
     constructor() {

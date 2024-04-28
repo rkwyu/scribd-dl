@@ -1,5 +1,4 @@
 import cliProgress from "cli-progress"
-import path from 'path'
 import { puppeteerSg } from "../utils/request/PuppeteerSg.js";
 import { pdfGenerator } from "../utils/io/PdfGenerator.js";
 import { configLoader } from "../utils/io/ConfigLoader.js";
@@ -60,7 +59,7 @@ class ScribdDownloader {
             const bar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
             bar.start(doc_pages.length, 0);
             for (let i = 0; i < doc_pages.length; i++) {
-                await page.evaluate((i) => {
+                await page.evaluate((i) => { // eslint-disable-next-line
                     document.getElementById(`outer_page_${(i + 1)}`).scrollIntoView()
                 }, i)
                 
