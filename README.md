@@ -1,16 +1,23 @@
-# Scribd-dl ![nodedotjs](https://img.shields.io/badge/node.js-v21.6.1-339933.svg?style=flat&logo=nodedotjs&logoColor=white) ![npm](https://img.shields.io/badge/npm-10.2.4-dc2c35.svg?style=flat&logo=npm&logoColor=white)
-[![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+# Scribd-dl ![nodedotjs](https://img.shields.io/badge/node.js-v21.6-339933.svg?style=flat&logo=nodedotjs&logoColor=white) ![npm](https://img.shields.io/badge/npm-10.2-dc2c35.svg?style=flat&logo=npm&logoColor=white)  
+
+<a href="https://buymeacoffee.com/r1y5i" target="_blank">
+<img style="border-radius: 20px" src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174">
+</a>
 
 ## About ##
 Scribd-dl helps downloading documents on [scribd.com](https://www.scribd.com/) and [slideshare.net](https://www.slideshare.net/) without membership / sign-in.  
 
-## Development Plan ##
-Scribd obfuscates the .pdf files, the texts copied from the documents might become strange garbled message.  
-De-obfuscating will be the next stage of this project.
-
 ## Prerequisites ##
-Please make sure the following tool(s) / application(s) are properly setup and ready to use:
-- Node.js ([https://nodejs.org/](https://nodejs.org/))
+To use Scridb-dl, you need to install [Node.js](https://nodejs.org/en/download/). It is recommended that you use the latest LTS version available.  
+
+> Please install Node.js using pre-built installers for your platform. You may encounter incompatibility issues with different development tools otherwise.  
+
+To check that Node.js was installed correctly, type the following commands in your terminal client:  
+```console
+node -v
+npm -v
+```
+The commands should print the versions of Node.js and npm accordingly.  
 
 ## Setup ##
 1. Download repository  
@@ -63,5 +70,10 @@ npm start "https://www.slideshare.net/slideshow/everything-you-need-to-know-abou
 - https://www.slideshare.net/**
 - https://www.slideshare.net/slideshow/**
 
+## Development Plan ##
+
+- Support [everand.com](https://www.everand.com/)  
+- Scribd obfuscates the .pdf files, the texts copied from the documents might become strange garbled message. De-obfuscating is one of the future plan.
+
 ## License ##
-[GNU GPL v3.0](LICENSE.md)
+This project is licensed under the [MIT License](LICENSE.md)
