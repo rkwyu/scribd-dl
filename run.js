@@ -1,5 +1,5 @@
 import { app } from './src/App.js'
-import * as scribdFlag  from './src/const/scribdFlag.js'
+import * as scribdFlag  from './src/const/ScribdFlag.js'
 
 const flags = [scribdFlag.DEFAULT, scribdFlag.IMAGE]
 

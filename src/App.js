@@ -15,7 +15,7 @@ class App {
         if (url.match(scribdRegex.DOMAIN)) {
             await scribdDownloader.execute(url, flag)
         } else if (url.match(slideshareRegex.DOMAIN)) {
-            await slideshareDownloader.execute(url, flag)
+            await slideshareDownloader.execute(url)
         } else {
             throw new Error(`Unsupported URL: ${url}`)
         }

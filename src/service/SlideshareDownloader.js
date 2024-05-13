@@ -35,7 +35,7 @@ class SlideshareDownloader {
         let dir = `${output}/${id}`
         await directoryIo.create(dir)
 
-        // navigate to scribd
+        // navigate to slideshare
         let page = await puppeteerSg.getPage(url)
 
         // wait rendering
