@@ -90,7 +90,6 @@ class EverandDownloader {
         const totalPage = await page.evaluate(() => [...document.querySelectorAll('div[data-e2e="pagination"] a[aria-label^="Page"]')].at(-1).textContent)
         const bar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic)
         bar.start(totalEpisode, 0)
-        xx:
         for (let i = 1; i <= totalPage; i++) {
             await page.goto(`${url}?page=${i}&sort=desc`, { waitUntil: "load" })
             await new Promise(resolve => setTimeout(resolve, 1000))
@@ -99,7 +98,6 @@ class EverandDownloader {
             for (let j = 0; j < episodes.length; j++ ) {
                 await this.listen(episodes[j], false)
                 bar.update(((i - 1) * 10) + (j + 1))
-                break xx
             }
         }
         bar.stop()
