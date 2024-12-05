@@ -28,7 +28,7 @@ class PuppeteerSg {
    */
   async getPage(url) {
     if (!this.browser) {
-      await this.launch()
+      await this.launch({headless: true, timeout: 0})
     }
     let page = await this.browser.newPage()
     await page.goto(url, {
