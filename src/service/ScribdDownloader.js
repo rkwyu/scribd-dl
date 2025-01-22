@@ -68,6 +68,7 @@ class ScribdDownloader {
             let options = {
                 path: `${output}/${id}.pdf`,
                 printBackground: true,
+                timeout: 0
             }
             let first_page = await page.$("div.outer_page_container div[id^='outer_page_']")
             let style = await first_page.evaluate((el) => el.getAttribute("style"))
