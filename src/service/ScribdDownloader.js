@@ -51,16 +51,18 @@ class ScribdDownloader {
             await new Promise(resolve => setTimeout(resolve, 1000))
 
             // load all pages
-            let doc_pages = await page.$$("div.outer_page_container div[id^='outer_page_']")
+            await page.click('div.document_scroller');
+            const container = await page.$('div.document_scroller');
+            const height = await container.evaluate(el => el.scrollHeight);
+            const clientHeight = await container.evaluate(el => el.clientHeight);
+            let cur = await container.evaluate(el => el.scrollTop);
             const bar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
-            bar.start(doc_pages.length, 0);
-            for (let i = 0; i < doc_pages.length; i++) {
-                await page.evaluate((i) => { // eslint-disable-next-line
-                    document.getElementById(`outer_page_${(i + 1)}`).scrollIntoView()  // eslint-disable-next-line
-                    document.getElementById(`outer_page_${(i + 1)}`).style.margin = 0
-                }, i)
+            bar.start(height, 0);
+            while (cur + clientHeight < height) {
+                await page.keyboard.press('PageDown');
                 await new Promise(resolve => setTimeout(resolve, rendertime))
-                bar.update(i + 1);
+                cur = await container.evaluate(el => el.scrollTop);
+                bar.update(cur + clientHeight);
             }
             bar.stop();
 
