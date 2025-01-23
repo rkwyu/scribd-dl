@@ -66,6 +66,14 @@ class ScribdDownloader {
             }
             bar.stop();
 
+            // remove margin to avoid extra blank page
+            let doc_pages = await page.$$("div.outer_page_container div[id^='outer_page_']")
+            for (let i = 0; i < doc_pages.length; i++) {
+                await page.evaluate((i) => {
+                    document.getElementById(`outer_page_${(i + 1)}`).style.margin = 0
+                }, i)
+            }
+
             // pdf setting
             let options = {
                 path: `${output}/${id}.pdf`,
