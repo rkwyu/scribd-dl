@@ -8,9 +8,11 @@ import { Image } from "../object/Image.js"
 import sharp from "sharp";
 import axios from "axios";
 import fs from "fs"
+import sanitize from "sanitize-filename";
 
 
 const output = configLoader.load("DIRECTORY", "output")
+const filename = configLoader.load("DIRECTORY", "filename")
 
 class SlideshareDownloader {
     constructor() {
@@ -40,6 +42,10 @@ class SlideshareDownloader {
 
         // wait rendering
         await new Promise(resolve => setTimeout(resolve, 1000))
+
+        // get the title
+        let h1 = await page.$("h1.title")
+        let title = decodeURIComponent(await h1.evaluate((el) => el.textContent.trim()))
 
         // get the page number
         let span = await page.$("span[data-cy='page-number']")
@@ -86,10 +92,10 @@ class SlideshareDownloader {
         bar.stop();
 
         // generate pdf
-        await pdfGenerator.generate(images, `${output}/${id}.pdf`)
+        await pdfGenerator.generate(images, `${output}/${sanitize(filename == "title" ? title : id)}.pdf`)
 
         // remove temp dir
-        directoryIo.remove(`${output}/${id}`)
+        directoryIo.remove(`${dir}`)
 
         await page.close()
         await puppeteerSg.close()

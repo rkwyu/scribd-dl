@@ -8,9 +8,11 @@ import * as scribdFlag  from '../const/ScribdFlag.js'
 import { Image } from "../object/Image.js"
 import sharp from "sharp";
 import path from 'path'
+import sanitize from "sanitize-filename";
 
 
 const output = configLoader.load("DIRECTORY", "output")
+const filename = configLoader.load("DIRECTORY", "filename")
 const rendertime = parseInt(configLoader.load("SCRIBD", "rendertime"))
 
 class ScribdDownloader {
@@ -50,6 +52,10 @@ class ScribdDownloader {
             // wait rendering
             await new Promise(resolve => setTimeout(resolve, 1000))
 
+            // get the title
+            let div = await page.$("div.mobile_overlay a")
+            let title = decodeURIComponent(await div.evaluate((el) => el.href.split('/').pop().trim()))
+
             // load all pages
             await page.click('div.document_scroller');
             const container = await page.$('div.document_scroller');
@@ -76,7 +82,7 @@ class ScribdDownloader {
 
             // pdf setting
             let options = {
-                path: `${output}/${id}.pdf`,
+                path: `${output}/${sanitize(filename == "title" ? title : id)}.pdf`,
                 printBackground: true,
                 timeout: 0
             }
@@ -119,6 +125,10 @@ class ScribdDownloader {
             // wait rendering
             await new Promise(resolve => setTimeout(resolve, 1000))
 
+            // get the title
+            let div = await page.$("div.mobile_overlay a")
+            let title = decodeURIComponent(await div.evaluate((el) => el.href.split('/').pop().trim()))
+
             // hide blockers
             let doc_container = await page.$("div.document_scroller")
             await doc_container.evaluate((el) => {
@@ -160,10 +170,10 @@ class ScribdDownloader {
             bar.stop();
 
             // generate pdf
-            await pdfGenerator.generate(images, `${output}/${id}.pdf`)
+            await pdfGenerator.generate(images, `${output}/${sanitize(filename == "title" ? title : id)}.pdf`)
 
             // remove temp dir
-            directoryIo.remove(`${output}/${id}`)
+            directoryIo.remove(`${dir}`)
 
             await page.close()
             await puppeteerSg.close()

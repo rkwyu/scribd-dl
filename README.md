@@ -40,9 +40,13 @@ rendertime=100
 
 [DIRECTORY]
 output=output
+filename=title
 ```
-`rendertime` is the waiting time in millisecond for single page rendering on [scribd.com](https://www.scribd.com/), it is only applicable for `default` mode.  
-`output` is the ouput directory for generated .pdf files.
+| Config | Description | Support |
+| --- | --- | --- |
+| `rendertime` | waiting time in millisecond for single page rendering | [scribd.com](https://www.scribd.com/) |
+| `output` | output directory | [scribd.com](https://www.scribd.com/)<br/>[slideshare.net](https://www.slideshare.net/)<br/>[everand.com](https://www.everand.com/podcasts) |
+| `filename` | output filename<br/>`title`: filename = default filename / title<br/>(otherwise, filename = ID) | [scribd.com](https://www.scribd.com/)<br/>[slideshare.net](https://www.slideshare.net/) |
 
 ## Usage (CLI) ##
 ```console
