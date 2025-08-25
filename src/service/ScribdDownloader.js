@@ -72,6 +72,12 @@ class ScribdDownloader {
             }
             bar.stop();
 
+             // remove cookies banner 'div.customOptInDialog'
+            let cookies = await page.$("div.customOptInDialog")
+            if (cookies) {
+                await cookies.evaluate((el) => el.remove())
+            }
+
             // remove margin to avoid extra blank page
             let doc_pages = await page.$$("div.outer_page_container div[id^='outer_page_']")
             for (let i = 0; i < doc_pages.length; i++) {
