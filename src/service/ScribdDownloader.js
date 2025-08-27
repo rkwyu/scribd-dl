@@ -56,6 +56,12 @@ class ScribdDownloader {
             let div = await page.$("div.mobile_overlay a")
             let title = decodeURIComponent(await div.evaluate((el) => el.href.split('/').pop().trim()))
 
+            // remove cookies banner 'div.customOptInDialog'
+            let cookies = await page.$("div.customOptInDialog")
+            if (cookies) {
+                await cookies.evaluate((el) => el.remove())
+            }
+
             // load all pages
             await page.click('div.document_scroller');
             const container = await page.$('div.document_scroller');
@@ -71,12 +77,6 @@ class ScribdDownloader {
                 bar.update(cur + clientHeight);
             }
             bar.stop();
-
-             // remove cookies banner 'div.customOptInDialog'
-            let cookies = await page.$("div.customOptInDialog")
-            if (cookies) {
-                await cookies.evaluate((el) => el.remove())
-            }
 
             // remove margin to avoid extra blank page
             let doc_pages = await page.$$("div.outer_page_container div[id^='outer_page_']")
