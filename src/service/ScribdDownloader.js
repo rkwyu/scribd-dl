@@ -56,10 +56,13 @@ class ScribdDownloader {
             let div = await page.$("div.mobile_overlay a")
             let title = decodeURIComponent(await div.evaluate((el) => el.href.split('/').pop().trim()))
 
-            // remove cookies banner 'div.customOptInDialog'
-            let cookies = await page.$("div.customOptInDialog")
-            if (cookies) {
-                await cookies.evaluate((el) => el.remove())
+            // remove cookies banners (including legacy 'div.customOptInDialog' for compatibility)
+            const cookieSelectors = ["div.customOptInDialog", "div[role='dialog']"];
+            for (const selector of cookieSelectors) {
+                const elements = await page.$$(selector);
+                for (const el of elements) {
+                    await el.evaluate(node => node.remove());
+                }
             }
 
             // load all pages
