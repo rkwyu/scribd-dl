@@ -57,7 +57,7 @@ class ScribdDownloader {
             let title = decodeURIComponent(await div.evaluate((el) => el.href.split('/').pop().trim()))
 
             // remove cookies banners (including legacy 'div.customOptInDialog' for compatibility)
-            const cookieSelectors = ["div.customOptInDialog", "div[role='dialog']"];
+            const cookieSelectors = ["div.customOptInDialog", "div[aria-label='Cookie Consent Banner']"];
             for (const selector of cookieSelectors) {
                 const elements = await page.$$(selector);
                 for (const el of elements) {
