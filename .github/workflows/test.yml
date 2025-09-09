@@ -1,0 +1,59 @@
+name: Nightly Regression
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 2 * * *" # Runs at 02:00 UTC every day
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Clean output folder
+      run: rm -f ./output/*.pdf
+
+    # --- Test scribd.com ---
+    - name: Run scribd-dl for a scribd file
+      run: npm start "https://www.scribd.com/doc/249398282/The-Minds-of-Billy-Milligan-Daniel-Keyes"
+
+    - name: Verify scribd file exists
+      run: |
+        if [ ! -f "./output/The-Minds-of-Billy-Milligan-Daniel-Keyes.pdf" ]; then
+          echo "Download failed: scribd file not found!"
+          exit 1
+        else
+          echo "Downloaded successfully: scribd file exists."
+        fi
+
+    # --- Test slideshare.net ---
+    - name: Run scribd-dl for a slideshare file
+      run: npm start "https://www.slideshare.net/slideshow/everything-you-need-to-know-about-chatgpt-8ba3/266783915"
+
+    - name: Verify slideshare download
+      run: |
+        FILE="./output/Everything You Need To Know About ChatGPT.pdf"
+        if [ ! -f "$FILE" ]; then
+          echo "Download failed: slides not found!"
+          exit 1
+        else
+          echo "Downloaded successfully: slides exist."
+        fi

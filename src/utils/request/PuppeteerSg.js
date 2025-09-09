@@ -15,9 +15,15 @@ class PuppeteerSg {
    * Launch a browser
    */
   async launch() {
+    const isCI = process.env.CI === 'true'; // Detect if running in CI
+    const args = [];
+    if (isCI) {
+      args.push('--no-sandbox', '--disable-setuid-sandbox');
+    }
     this.browser = await puppeteer.launch({
       headless: "new",
       defaultViewport: null,
+      args
     });
   }
 
@@ -28,7 +34,7 @@ class PuppeteerSg {
    */
   async getPage(url) {
     if (!this.browser) {
-      await this.launch({headless: true, timeout: 0})
+      await this.launch()
     }
     let page = await this.browser.newPage()
     await page.goto(url, {
