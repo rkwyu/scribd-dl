@@ -34,59 +34,37 @@ class SlideshareDownloader {
 
     async slideshow(url, id) {
         // prepare temp dir
-        let dir = `${output}/${id}`
+        const dir = `${output}/${id}`
         await directoryIo.create(dir)
 
         // navigate to slideshare
-        let page = await puppeteerSg.getPage(url)
+        const page = await puppeteerSg.getPage(url)
 
         // wait rendering
         await new Promise(resolve => setTimeout(resolve, 1000))
 
         // get the title
-        let h1 = await page.$("h1.title")
-        let title = decodeURIComponent(await h1.evaluate((el) => el.textContent.trim()))
+        const h1 = await page.$("h1.title")
+        const title = decodeURIComponent(await h1.evaluate((el) => el.textContent.trim()))
 
-        // get the page number
-        let span = await page.$("span[data-cy='page-number']")
-        let pageNumber = parseInt((await span.evaluate((el) => el.textContent)).split("of")[1])
+        // get slides images
+        const srcs = await page.$$eval("img[id^='slide-image-']", imgs => imgs.map(img => img.src));
 
-        // get the highest resolution
-        let image0 = await page.$("img#slide-image-0")
-        let srcset0 = await image0.evaluate((el) => el["srcset"])
-        let prefix = ""
-        let suffix = ""
-        let resolution = -1
-        let matches
-        while ((matches = slideshareRegex.CDN.exec(srcset0)) != null) {
-            if (resolution < parseInt(matches[4])) {
-                prefix = matches[1]
-                suffix = matches[3]
-                resolution = parseInt(matches[4])
-            }
-        }
-
-        // download images
-        let images = []
+        // iterate all images
+        const images = []
         const bar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
-        bar.start(pageNumber, 0);
-        for (let i = 0; i < pageNumber; i++) {
-            let path = `${dir}/${(i + 1).toString().padStart(4, 0)}.png`
+        bar.start(srcs.length, 0);
+        for (let i = 0; i < srcs.length; i++) {
+            const src = srcs[i];
+            const path = `${dir}/${(i + 1).toString().padStart(4, '0')}.png`
 
             // convert the webp (even it shows jpg) to png
-            const resp = await axios.get(
-                `${prefix}${i + 1}-${resolution}${suffix}`,
-                { responseType: 'arraybuffer' }
-            )
+            const resp = await axios.get(src, { responseType: 'arraybuffer' })
             const imageBuffer = await sharp(resp.data).toFormat('png').toBuffer();
             fs.writeFileSync(path, Buffer.from(imageBuffer, 'binary'))
 
-            let metadata = await sharp(path).metadata()
-            images.push(new Image(
-                path,
-                metadata.width,
-                metadata.height
-            ))
+            const metadata = await sharp(path).metadata();
+            images.push(new Image(path, metadata.width, metadata.height));
             bar.update(i + 1);
         }
         bar.stop();
