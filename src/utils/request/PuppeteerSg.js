@@ -23,7 +23,8 @@ class PuppeteerSg {
     this.browser = await puppeteer.launch({
       headless: "new",
       defaultViewport: null,
-      args
+      args,
+      timeout: 0,
     });
   }
 
