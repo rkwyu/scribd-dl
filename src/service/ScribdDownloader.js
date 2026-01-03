@@ -90,25 +90,20 @@ class ScribdDownloader {
             progressBar.update(scrollHeight);
             progressBar.stop();
 
-            // remove margin of each page
-            let pageSelectors = await page.$$("div.outer_page_container div[id^='outer_page_']")
-            for (let i = 0; i < pageSelectors.length; i++) {
-                await page.evaluate((i) => {
-                    document.getElementById(`outer_page_${(i + 1)}`).style.margin = 0
-                }, i)
-            }
+            // remove margin of each page and hide all initially
+            const pageCount = await page.evaluate(() => {
+                const pages = document.querySelectorAll("div.outer_page_container div[id^='outer_page_']");
+                pages.forEach(p => {
+                    p.style.margin = '0';
+                    p.style.display = 'none';
+                });
+                return pages.length;
+            });
 
             // keep only the outer_page_container content
             await page.evaluate(() => { // eslint-disable-next-line
                 document.body.innerHTML = document.querySelector("div.outer_page_container").innerHTML
             })
-            
-            // hide all pages initially
-            for (let i = 0; i < pageSelectors.length; i++) {
-                await page.evaluate((i) => {
-                    document.getElementById(`outer_page_${(i + 1)}`).style.display = 'none'
-                }, i)
-            }
 
             // prepare pdf options
             let options = {
@@ -118,8 +113,8 @@ class ScribdDownloader {
 
             // generate per-page pdfs
             console.log(`Generate per-page PDFs...`)
-            progressBar.start(pageSelectors.length, 0);
-            for (let i = 0; i < pageSelectors.length; i++) {
+            progressBar.start(pageCount, 0);
+            for (let i = 0; i < pageCount; i++) {
                 // show current page
                 await page.evaluate((i) => {
                     document.getElementById(`outer_page_${(i + 1)}`).style.display = 'block'
@@ -128,7 +123,7 @@ class ScribdDownloader {
                 // get page size and set options
                 let pageSelector = await page.$(`#outer_page_${(i + 1)}`);
                 let style = await pageSelector.evaluate((el) => el.getAttribute("style"))
-                options.path = `${output}/${identifier}/${("00" + i).slice(-3)}.pdf`
+                options.path = `${output}/${identifier}/${String(i).padStart(5, '0')}.pdf`
                 options.height = parseInt(style.split("height:")[1].split("px")[0].trim())
                 if (options.height % 2 !== 0) {
                     options.height += 1
@@ -141,7 +136,8 @@ class ScribdDownloader {
 
                 // hide current page
                 await page.evaluate((i) => {
-                    document.getElementById(`outer_page_${(i + 1)}`).style.display = 'none'
+                    const el = document.getElementById(`outer_page_${(i + 1)}`);
+                    if (el) el.remove();
                 }, i)
 
                 progressBar.update(i + 1);
@@ -152,8 +148,8 @@ class ScribdDownloader {
             // merge per-page pdfs
             console.log(`Merging PDFs...`)
             const outputPdf = await PDFDocument.create();
-            for (let i = 0; i < pageSelectors.length; i++) {
-                let tmpPdfPath = `${output}/${identifier}/${("00" + i).slice(-3)}.pdf`
+            for (let i = 0; i < pageCount; i++) {
+                let tmpPdfPath = `${output}/${identifier}/${String(i).padStart(5, '0')}.pdf`
                 try {
                     const pdfBytes = await fs.readFile(tmpPdfPath);
                     const sourcePdf = await PDFDocument.load(pdfBytes);
