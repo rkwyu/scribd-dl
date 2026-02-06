@@ -38,7 +38,7 @@ class SlideshareDownloader {
         await directoryIo.create(dir)
 
         // navigate to slideshare
-        const page = await puppeteerSg.getPage(url)
+        const page = await puppeteerSg.getPage(url, true)
 
         // wait rendering
         await new Promise(resolve => setTimeout(resolve, 1000))
@@ -56,7 +56,7 @@ class SlideshareDownloader {
         bar.start(srcs.length, 0);
         for (let i = 0; i < srcs.length; i++) {
             const src = srcs[i];
-            const path = `${dir}/${(i + 1).toString().padStart(4, '0')}.png`
+            const path = `${dir}/${(i + 1).toString().padStart(5, '0')}.png`
 
             // convert the webp (even it shows jpg) to png
             const resp = await axios.get(src, { responseType: 'arraybuffer' })

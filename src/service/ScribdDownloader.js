@@ -227,7 +227,7 @@ class ScribdDownloader {
                 }
                 await page.setViewport({ width: width, height: height, deviceScaleFactor: deviceScaleFactor });
 
-                let imagePath = `${dir}/${(i + 1).toString().padStart(4, 0)}.png`
+                let imagePath = `${dir}/${(i + 1).toString().padStart(5, 0)}.png`
                 await docOuterPages[i].screenshot({ path: imagePath });
 
                 let metadata = await sharp(imagePath).metadata()

@@ -33,7 +33,7 @@ class PuppeteerSg {
    * @param {string} url 
    * @returns 
    */
-  async getPage(url) {
+  async getPage(url, lazyLoad = false) {
     if (!this.browser) {
       await this.launch()
     }
@@ -41,7 +41,33 @@ class PuppeteerSg {
     await page.goto(url, {
       waitUntil: "load",
     })
+    if (lazyLoad) {
+      await this.autoScroll(page);
+    }
     return page
+  }
+
+  /**
+   * Auto scroll the page to trigger lazy loading
+   * @param {object} page - Puppeteer page object
+   */
+  async autoScroll(page) {
+      await page.evaluate(async () => {
+          await new Promise(resolve => {
+            const delay = 100;
+            const timer = setInterval(() => {
+                const scrollHeight = document.body.scrollHeight;
+                window.scrollBy(0, window.innerHeight * 0.8);
+                if (window.innerHeight + window.scrollY >= scrollHeight) {
+                  clearInterval(timer);
+                  resolve();
+                }
+            }, delay);
+          });
+      });
+
+      // Small safety buffer after last scroll
+      await page.waitForTimeout(1200);
   }
 
   /**
